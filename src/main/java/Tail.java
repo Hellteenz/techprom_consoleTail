@@ -64,7 +64,6 @@ public class Tail {
         else throw new Error("Wrong command");
     }
     public void commandC(FileReader input) {
-
     }
     public void commandN(FileReader input) {
 
