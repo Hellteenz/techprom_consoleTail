@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,26 +40,30 @@ public class Tail {
 
     public void fileParsing(String[] args) throws Error {
         boolean commandCheck = false;
-        for (String data: args) {
-            Matcher matcherC = Pattern.compile("\\[-c \\d\\]").matcher(data);
-            Matcher matcherN = Pattern.compile("\\[-n \\d\\]").matcher(data);
-            Matcher matcherFileName = Pattern.compile("[A-z]*").matcher(data);
-            Matcher matcherO = Pattern.compile("\\[-o [A-z]\\]").matcher(data);
-            if (matcherC.matches() && !commandCheck) {
+        boolean isOutputName = false;
+        for (int comInd = 0; comInd < args.length; comInd++) {
+            Matcher matcherFileName = Pattern.compile("[A-z._\\d]*").matcher(args[comInd]);
+            Matcher matcherNum = Pattern.compile("\\d").matcher(args[comInd]);
+            if (Objects.equals(args[comInd], "-c") && !commandCheck) {
                 command = "c";
-                comNum = data.charAt(4);
                 commandCheck = true;
             }
-            if (matcherN.matches() && !commandCheck) {
+            else if (Objects.equals(args[comInd], "-n") && !commandCheck) {
                 command = "n";
-                comNum = data.charAt(4);
                 commandCheck = true;
             }
-            if (matcherFileName.matches()) {
-                files.add(data);
+            else if (matcherFileName.matches() && !Objects.equals(args[comInd - 1], "-o") && !matcherNum.matches()) {
+                files.add(args[comInd]);
             }
-            if (matcherO.matches()) {
-                output = data;
+            else if (Objects.equals(args[comInd], "-o")) {
+                isOutputName = true;
+            }
+            else if (matcherFileName.matches() && isOutputName) {
+                output = args[comInd];
+                isOutputName = false;
+            }
+            else if (matcherNum.matches()) {
+                comNum = Integer.parseInt(args[comInd]);
             }
             else throw new Error("Parse Error");
         }
