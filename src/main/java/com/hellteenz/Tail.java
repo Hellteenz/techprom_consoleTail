@@ -1,5 +1,4 @@
 package com.hellteenz;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,24 +17,16 @@ public class Tail {
     public static void main(String[] args) throws IOException {
         Tail voidTail = new Tail();
         voidTail.fileParsing(args);
-        if (voidTail.files.size() > 1) {
-            for (String inputFile : voidTail.files) {
-                String inputName = inputFile + ".txt";
-                FileReader input = new FileReader(inputName);
-                Scanner scan = new Scanner(input);
-                System.out.println(inputFile);
-                voidTail.commandChecker(voidTail, voidTail.command, scan);
-                input.close();
-            }
-        }
-        if (voidTail.files.size() == 1) {
-            String inputName = voidTail.files.get(0) + ".txt";
+        for (String inputFile : voidTail.files) {
+            String inputName = inputFile + ".txt";
             FileReader input = new FileReader(inputName);
             Scanner scan = new Scanner(input);
+            if (voidTail.files.size() > 1) {
+                System.out.println(inputFile);
+            }
             voidTail.commandChecker(voidTail, voidTail.command, scan);
             input.close();
         }
-        else throw new FileNotFoundException("Input data hasn't any files");
     }
 
     public void fileParsing(String[] args) throws Error {
@@ -68,16 +59,16 @@ public class Tail {
             else throw new Error("Parse Error");
         }
     }
-    public void commandChecker(Tail voidTail, String command, Scanner scan) throws Error, IOException {
+    public void commandChecker(Tail voidTail, String command, Scanner scan) throws IOException {
         List<String> fileData = new ArrayList<>();
         while (scan.hasNextLine()) {
             fileData.add(scan.nextLine());
         }
         FileWriter outputFile = new FileWriter(output);
-        if (command == "c") {
+        if (Objects.equals(command, "c")) {
             voidTail.commandC(fileData, voidTail.comNum, outputFile);
         }
-        if (command == "n") {
+        if (Objects.equals(command, "n")) {
             voidTail.commandN(fileData, voidTail.comNum, outputFile);
         }
         else {
