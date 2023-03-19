@@ -1,9 +1,29 @@
-plugins {
-    id 'java'
+apply plugin: 'application'
+apply plugin: 'java'
+
+version '1.0'
+
+sourceSets {
+    main {
+        java {
+            srcDir '../src/main/java'
+            srcDir 'src/main/java'
+        }
+    }
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+//create a single Jar with all dependencies
+mainClassName = "com.hellteenz.Tail"
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 repositories {
     mavenCentral()
