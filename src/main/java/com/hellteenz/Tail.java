@@ -93,14 +93,14 @@ public class Tail {
     }
     public void commandN(List<String> linesList, int num, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - num; lineInd < linesList.size(); lineInd++) {
-            outputFile.write(linesList.get(lineInd).trim() + "\n");
-            if (lineInd != linesList.size() - 1) outputFile.write("\n");
+            outputFile.write(linesList.get(lineInd).trim());
+            if (lineInd != linesList.size() - 1) outputFile.write("\r\n");
         }
     }
     public void nullCommand(List<String> linesList, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - 10; lineInd < linesList.size(); lineInd++) {
             outputFile.write(linesList.get(lineInd).trim());
-            if (lineInd != linesList.size() - 1) outputFile.write("\n");
+            if (lineInd != linesList.size() - 1) outputFile.write("\r\n");
         }
     }
 }
