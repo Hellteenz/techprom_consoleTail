@@ -22,16 +22,15 @@ public class Tail {
     public void fileParsing (Tail voidTail, String[] args) throws IOException {
         voidTail.requestParsing(args);
         FileWriter outputFile = new FileWriter(output);
-        for (int fileInd = 0; fileInd < voidTail.files.size(); fileInd++) {
-            String inputName = voidTail.files.get(fileInd) + ".txt";
+        for (String inputFile : voidTail.files) {
+            String inputName = inputFile + ".txt";
             FileReader input = new FileReader(inputName);
             Scanner scan = new Scanner(input);
             if (voidTail.files.size() > 1) {
-                outputFile.write(inputName + "\n");
+                outputFile.write("\n" + inputName + "\n");
             }
             voidTail.commandChecker(voidTail, voidTail.command, scan, outputFile);
             input.close();
-            if (fileInd != voidTail.files.size() - 1) outputFile.write("\n");
         }
         outputFile.close();
     }
@@ -90,16 +89,18 @@ public class Tail {
             symbolsStr.append(" ");
         }
         int extraSymbols = lineSize - num;
-        outputFile.write(String.valueOf(symbolsStr.substring(extraSymbols)));
+        outputFile.write(symbolsStr.substring(extraSymbols).trim());
     }
     public void commandN(List<String> linesList, int num, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - num; lineInd < linesList.size(); lineInd++) {
-            outputFile.write(linesList.get(lineInd) + "\n");
+            outputFile.write(linesList.get(lineInd).trim() + "\n");
+            if (lineInd != linesList.size() - 1) outputFile.write("\n");
         }
     }
     public void nullCommand(List<String> linesList, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - 10; lineInd < linesList.size(); lineInd++) {
-            outputFile.write(linesList.get(lineInd) + "\n");
+            outputFile.write(linesList.get(lineInd).trim());
+            if (lineInd != linesList.size() - 1) outputFile.write("\n");
         }
     }
 }
