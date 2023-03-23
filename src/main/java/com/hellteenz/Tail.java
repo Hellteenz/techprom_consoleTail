@@ -22,8 +22,8 @@ public class Tail {
     public void fileParsing (Tail voidTail, String[] args) throws IOException {
         voidTail.requestParsing(args);
         FileWriter outputFile = new FileWriter(output);
-        for (String inputFile : voidTail.files) {
-            String inputName = inputFile + ".txt";
+        for (int fileInd = 0; fileInd < voidTail.files.size(); fileInd++) {
+            String inputName = voidTail.files.get(fileInd) + ".txt";
             FileReader input = new FileReader(inputName);
             Scanner scan = new Scanner(input);
             if (voidTail.files.size() > 1) {
@@ -31,7 +31,7 @@ public class Tail {
             }
             voidTail.commandChecker(voidTail, voidTail.command, scan, outputFile);
             input.close();
-            outputFile.write("\n");
+            if (fileInd != voidTail.files.size() - 1) outputFile.write("\n");
         }
         outputFile.close();
     }
