@@ -16,20 +16,27 @@ public class Tail {
 
     public static void main(String[] args) throws IOException {
         Tail voidTail = new Tail();
-        voidTail.fileParsing(args);
+        voidTail.fileParsing(voidTail, args);
+   }
+
+    public void fileParsing (Tail voidTail, String[] args) throws IOException {
+        voidTail.requestParsing(args);
+        FileWriter outputFile = new FileWriter(output);
         for (String inputFile : voidTail.files) {
             String inputName = inputFile + ".txt";
             FileReader input = new FileReader(inputName);
             Scanner scan = new Scanner(input);
             if (voidTail.files.size() > 1) {
-                System.out.println(inputFile);
+                outputFile.write(inputName + "\n");
             }
-            voidTail.commandChecker(voidTail, voidTail.command, scan);
+            voidTail.commandChecker(voidTail, voidTail.command, scan, outputFile);
             input.close();
+            outputFile.write("\n");
         }
+        outputFile.close();
     }
 
-    public void fileParsing(String[] args) throws Error {
+    public void requestParsing(String[] args) throws Error {
         boolean commandCheck = false;
         boolean isOutputName = false;
         for (int comInd = 0; comInd < args.length; comInd++) {
@@ -59,16 +66,15 @@ public class Tail {
             else throw new Error("Parse Error");
         }
     }
-    public void commandChecker(Tail voidTail, String command, Scanner scan) throws IOException {
+    public void commandChecker(Tail voidTail, String command, Scanner scan, FileWriter outputFile) throws IOException {
         List<String> fileData = new ArrayList<>();
         while (scan.hasNextLine()) {
             fileData.add(scan.nextLine());
         }
-        FileWriter outputFile = new FileWriter(output);
         if (Objects.equals(command, "c")) {
             voidTail.commandC(fileData, voidTail.comNum, outputFile);
         }
-        if (Objects.equals(command, "n")) {
+        else if (Objects.equals(command, "n")) {
             voidTail.commandN(fileData, voidTail.comNum, outputFile);
         }
         else {
@@ -79,24 +85,21 @@ public class Tail {
         int lineSize = 0;
         StringBuilder symbolsStr = new StringBuilder();
         for (int lineInd = linesList.size() - 1; lineSize < num; lineInd--) {
-            lineSize += lineInd;
-            symbolsStr.append(files.get(lineInd));
+            lineSize += linesList.get(lineInd).length();
+            symbolsStr.append(linesList.get(lineInd));
             symbolsStr.append(" ");
         }
         int extraSymbols = lineSize - num;
-        outputFile.write(symbolsStr.substring(extraSymbols));
-        outputFile.close();
+        outputFile.write(String.valueOf(symbolsStr.substring(extraSymbols)));
     }
     public void commandN(List<String> linesList, int num, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - num; lineInd < linesList.size(); lineInd++) {
-            outputFile.write(linesList.get(lineInd));
+            outputFile.write(linesList.get(lineInd) + "\n");
         }
-        outputFile.close();
     }
     public void nullCommand(List<String> linesList, FileWriter outputFile) throws IOException {
         for (int lineInd = linesList.size() - 10; lineInd < linesList.size(); lineInd++) {
-            outputFile.write(linesList.get(lineInd));
+            outputFile.write(linesList.get(lineInd) + "\n");
         }
-        outputFile.close();
     }
 }
