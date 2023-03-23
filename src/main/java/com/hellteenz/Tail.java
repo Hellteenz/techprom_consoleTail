@@ -41,7 +41,7 @@ public class Tail {
         boolean isOutputName = false;
         for (int comInd = 0; comInd < args.length; comInd++) {
             Matcher matcherFileName = Pattern.compile("[A-z._\\d]*").matcher(args[comInd]);
-            Matcher matcherNum = Pattern.compile("\\d").matcher(args[comInd]);
+            Matcher matcherNum = Pattern.compile("\\d*").matcher(args[comInd]);
             if (Objects.equals(args[comInd], "-c") && !commandCheck) {
                 command = "c";
                 commandCheck = true;
@@ -49,6 +49,9 @@ public class Tail {
             else if (Objects.equals(args[comInd], "-n") && !commandCheck) {
                 command = "n";
                 commandCheck = true;
+            }
+            else if (matcherNum.matches()) {
+                comNum = Integer.parseInt(args[comInd]);
             }
             else if (matcherFileName.matches() && !Objects.equals(args[comInd - 1], "-o") && !matcherNum.matches()) {
                 files.add(args[comInd]);
@@ -59,9 +62,6 @@ public class Tail {
             else if (matcherFileName.matches() && isOutputName) {
                 output = args[comInd];
                 isOutputName = false;
-            }
-            else if (matcherNum.matches()) {
-                comNum = Integer.parseInt(args[comInd]);
             }
             else throw new Error("Parse Error");
         }
