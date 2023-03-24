@@ -1,18 +1,25 @@
 package com.hellteenz;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+
+import static java.lang.System.out;
+
 public class Tail {
-    private final List<String> files = new ArrayList<>();
-    private String output;
-    private String command;
     private int comNum;
+    @Option(name = "-c", forbids = {"-n"})
+    private int commandC;
+    @Option(name = "-n", forbids = {"-c"})
+    private int commandN;
+    @Option(name = "-o")
+    private String output;
+    @Argument private List<String> files = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         Tail voidTail = new Tail();
@@ -24,57 +31,39 @@ public class Tail {
         FileWriter outputFile = new FileWriter(output);
         for (String inputFile : voidTail.files) {
             String inputName = inputFile + ".txt";
-            FileReader input = new FileReader(inputName);
-            Scanner scan = new Scanner(input);
-            if (voidTail.files.size() > 1) {
-                outputFile.write("\n" + inputName + "\n");
+            try (FileReader input = new FileReader("testInput/" + inputName)) {
+                Scanner scan = new Scanner(input);
+                if (voidTail.files.size() > 1) {
+                    outputFile.write("\n" + inputName + "\n");
+                }
+                voidTail.commandChecker(voidTail, scan, outputFile);
+            } catch (FileNotFoundException fileNotFoundException) {
+                throw new FileNotFoundException("Input file is not found");
             }
-            voidTail.commandChecker(voidTail, voidTail.command, scan, outputFile);
-            input.close();
         }
         outputFile.close();
     }
-
-    public void requestParsing(String[] args) throws Error {
-        boolean commandCheck = false;
-        boolean isOutputName = false;
-        for (int comInd = 0; comInd < args.length; comInd++) {
-            Matcher matcherFileName = Pattern.compile("[A-z._\\d]*").matcher(args[comInd]);
-            Matcher matcherNum = Pattern.compile("\\d*").matcher(args[comInd]);
-            if (Objects.equals(args[comInd], "-c") && !commandCheck) {
-                command = "c";
-                commandCheck = true;
-            }
-            else if (Objects.equals(args[comInd], "-n") && !commandCheck) {
-                command = "n";
-                commandCheck = true;
-            }
-            else if (matcherNum.matches()) {
-                comNum = Integer.parseInt(args[comInd]);
-            }
-            else if (matcherFileName.matches() && !Objects.equals(args[comInd - 1], "-o") && !matcherNum.matches()) {
-                files.add(args[comInd]);
-            }
-            else if (Objects.equals(args[comInd], "-o")) {
-                isOutputName = true;
-            }
-            else if (matcherFileName.matches() && isOutputName) {
-                output = args[comInd];
-                isOutputName = false;
-            }
-            else throw new Error("Parse Error");
+    private void requestParsing(String[] args) {
+        CmdLineParser parser = new CmdLineParser(this);
+        try
+        {
+            parser.parseArgument(args);
+        }
+        catch (CmdLineException clEx)
+        {
+            out.println("ERROR: Unable to parse command-line options: " + clEx);
         }
     }
-    public void commandChecker(Tail voidTail, String command, Scanner scan, FileWriter outputFile) throws IOException {
+    public void commandChecker(Tail voidTail, Scanner scan, FileWriter outputFile) throws IOException {
         List<String> fileData = new ArrayList<>();
         while (scan.hasNextLine()) {
             fileData.add(scan.nextLine());
         }
-        if (Objects.equals(command, "c")) {
-            voidTail.commandC(fileData, voidTail.comNum, outputFile);
+        if (commandC != 0) {
+            voidTail.commandC(fileData, commandC, outputFile);
         }
-        else if (Objects.equals(command, "n")) {
-            voidTail.commandN(fileData, voidTail.comNum, outputFile);
+        else if (commandN != 0) {
+            voidTail.commandN(fileData, commandN, outputFile);
         }
         else {
             voidTail.nullCommand(fileData, outputFile);
