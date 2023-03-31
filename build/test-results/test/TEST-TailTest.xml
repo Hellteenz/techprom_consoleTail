@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="TailTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-03-24T17:23:59" hostname="LAPTOP-6DCDBB3K" time="0.385">
+<testsuite name="TailTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-03-31T09:54:30" hostname="LAPTOP-6DCDBB3K" time="0.481">
   <properties/>
-  <testcase name="Quatar()" classname="TailTest" time="0.06"/>
-  <testcase name="a_27()" classname="TailTest" time="0.012"/>
-  <testcase name="b_27()" classname="TailTest" time="0.297"/>
-  <testcase name="Essay()" classname="TailTest" time="0.011"/>
+  <testcase name="Quatar()" classname="TailTest" time="0.147"/>
+  <testcase name="a_27()" classname="TailTest" time="0.018"/>
+  <testcase name="b_27()" classname="TailTest" time="0.306"/>
+  <testcase name="Essay()" classname="TailTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
