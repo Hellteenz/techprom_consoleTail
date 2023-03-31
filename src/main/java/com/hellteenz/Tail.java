@@ -28,20 +28,18 @@ public class Tail {
 
     public void fileParsing (Tail voidTail, String[] args) throws IOException {
         voidTail.requestParsing(args);
-        FileWriter outputFile = new FileWriter(output);
-        for (String inputFile : voidTail.files) {
-            String inputName = inputFile + ".txt";
-            try (FileReader input = new FileReader("testInput/" + inputName)) {
-                Scanner scan = new Scanner(input);
-                if (voidTail.files.size() > 1) {
-                    outputFile.write("\n" + inputName + "\n");
+        try (FileWriter outputFile = new FileWriter(output)) {
+            for (String inputFile : voidTail.files) {
+                String inputName = inputFile + ".txt";
+                try (FileReader input = new FileReader("testInput/" + inputName)) {
+                    Scanner scan = new Scanner(input);
+                    if (voidTail.files.size() > 1) {
+                        outputFile.write("\n" + inputName + "\n");
+                    }
+                    voidTail.commandChecker(voidTail, scan, outputFile);
                 }
-                voidTail.commandChecker(voidTail, scan, outputFile);
-            } catch (FileNotFoundException fileNotFoundException) {
-                throw new FileNotFoundException("Input file is not found");
             }
         }
-        outputFile.close();
     }
     private void requestParsing(String[] args) {
         CmdLineParser parser = new CmdLineParser(this);
